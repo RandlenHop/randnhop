@@ -10,7 +10,7 @@ app.use(express.json());
 
 let origin;
 if (process.env.NODE_ENV === "production") {
-  origin = ["https://acl-courier-services.vercel.app"];
+  origin = ["https://aclshippingsinc.com"];
 } else {
   origin = ["http://localhost:3000"];
 }
