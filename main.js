@@ -14,6 +14,8 @@ if (process.env.NODE_ENV === "production") {
     "aclshippingsinc.com",
     "https://www.aclshippingsinc.com",
     "https://aclshippingsinc.com",
+    "https://aclshippingsinc.com/",
+    "https://www.aclshippingsinc.com/",
   ];
 } else {
   origin = ["http://localhost:3000"];
