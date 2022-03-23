@@ -10,13 +10,7 @@ app.use(express.json());
 
 let origin;
 if (process.env.NODE_ENV === "production") {
-  origin = [
-    "aclshippingsinc.com",
-    "https://www.aclshippingsinc.com",
-    "https://aclshippingsinc.com",
-    "https://aclshippingsinc.com/",
-    "https://www.aclshippingsinc.com/",
-  ];
+  origin = ["https://www.aclshippingsinc.com"];
 } else {
   origin = ["http://localhost:3000"];
 }
