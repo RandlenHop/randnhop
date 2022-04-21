@@ -25,7 +25,7 @@ const corsOptions = {
   origin: origin,
   optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
+app.use(cors());
 
 // Connect Database
 connectDB();
