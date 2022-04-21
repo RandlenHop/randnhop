@@ -11,7 +11,7 @@ app.use(express.json());
 let origin;
 if (process.env.NODE_ENV === "production") {
   origin = [
-    // "https://www.swizzlloyddelivery.com",
+    "https://www.swizzlloyddelivery.com",
     // "https://www.swizzlloyddelivery.com/",
     "https://swizzlloyddelivery.com",
     // "www.swizzlloyddelivery.com/",
@@ -25,7 +25,7 @@ const corsOptions = {
   origin: origin,
   optionsSuccessStatus: 200,
 };
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Connect Database
 connectDB();
