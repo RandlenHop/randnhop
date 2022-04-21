@@ -13,6 +13,8 @@ if (process.env.NODE_ENV === "production") {
   origin = [
     "https://www.swizzlloyddelivery.com",
     "https://swizzlloyddelivery.com",
+    "https://www.swizzlloyddelivery.com/",
+    "swizzlloyddelivery.com",
   ];
 } else {
   origin = ["http://localhost:3000"];
