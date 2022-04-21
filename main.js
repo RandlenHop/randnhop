@@ -11,9 +11,10 @@ app.use(express.json());
 let origin;
 if (process.env.NODE_ENV === "production") {
   origin = [
+    "*",
     // "https://www.swizzlloyddelivery.com",
     // "https://www.swizzlloyddelivery.com/",
-    "https://swizzlloyddelivery.com",
+    // "https://swizzlloyddelivery.com",
     // "www.swizzlloyddelivery.com/",
     // "swizzlloyddelivery.com",
   ];
