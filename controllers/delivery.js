@@ -234,6 +234,47 @@ const modifyStatus = asyncHandler(async (req, res) => {
   }
 });
 
+const modifyLocation = asyncHandler(async (req, res) => {
+  const id =
+    req.params.id.split("-").length === 1
+      ? req.params.id
+      : req.params.id.split("-")[1];
+  const { newLocation } = req.body;
+
+  let delivery;
+
+  if (!id) {
+    res.status(400);
+    throw new Error("Please provide some Id");
+  }
+
+  try {
+    delivery = await MODEL.updateOne(
+      {
+        _id: id,
+      },
+      {
+        "deliveryLocation.location": newLocation,
+        $push: {
+          "deliveryLocation.timeline": {
+            location: newLocation,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    res.status(400);
+    throw new Error("Failed to update location of delivery. Please try again.");
+  }
+
+  if (!delivery) {
+    res.status(500);
+    throw new Error("Failed to update location of delivery. Please try again");
+  } else {
+    success(res, 202, "location updated successfully!", delivery);
+  }
+});
+
 module.exports = {
   create,
   addImages,
@@ -241,4 +282,5 @@ module.exports = {
   removeDelivery,
   singleDelivery,
   modifyStatus,
+  modifyLocation,
 };

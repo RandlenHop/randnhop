@@ -173,6 +173,11 @@ const message = Joi.string().required().min(10).messages({
   "string.min": "Your message should have a minimum length of ten characters",
   "any.required": "Please enter a valid message.",
 });
+const location = Joi.string().required().min(2).messages({
+  "string.empty": "Your location cannot be an empty field",
+  "string.min": "Your location should have a minimum length of two characters",
+  "any.required": "Please enter a valid location.",
+});
 const status = Joi.string()
   .required()
   .valid(
@@ -210,6 +215,20 @@ const createPostSchema = Joi.object({
 const createPostValidation = asyncHandler(async (req, res, next) => {
   try {
     await createPostSchema.validateAsync(req.body);
+    next();
+  } catch (error) {
+    res.status(422);
+    throw new Error(error.details[0].message);
+  }
+});
+
+const modifyLocationSchema = Joi.object({
+  newLocation: location,
+});
+
+const modifyLocationValidation = asyncHandler(async (req, res, next) => {
+  try {
+    await modifyLocationSchema.validateAsync(req.body);
     next();
   } catch (error) {
     res.status(422);
@@ -283,4 +302,5 @@ module.exports = {
   commentValidation,
   replyValidation,
   modifyStatusValidation,
+  modifyLocationValidation,
 };

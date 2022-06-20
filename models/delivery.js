@@ -1,5 +1,14 @@
 const mongoose = require("mongoose");
 
+const timelineSchema = mongoose.Schema(
+  {
+    location: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
 const deliverySchema = mongoose.Schema(
   {
     productImages: [
@@ -84,6 +93,12 @@ const deliverySchema = mongoose.Schema(
       message: {
         type: String,
         default: "The product is out for delivery",
+      },
+    },
+    deliveryLocation: {
+      timeline: [timelineSchema],
+      location: {
+        type: String,
       },
     },
   },
