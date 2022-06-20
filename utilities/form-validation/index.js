@@ -151,6 +151,7 @@ const title = Joi.string().required().min(10).messages({
   "string.min": "Your title should have a minimum length of ten characters",
   "any.required": "Please enter a valid title.",
 });
+
 const subTitle = Joi.string().required().min(10).messages({
   "string.empty": "Your sub title cannot be an empty field",
   "string.min": "Your sub title should have a minimum length of ten characters",
@@ -167,6 +168,37 @@ const category = Joi.string().required().messages({
   "any.required": "Please enter a valid category.",
 });
 
+const message = Joi.string().required().min(10).messages({
+  "string.empty": "Your message cannot be an empty field",
+  "string.min": "Your message should have a minimum length of ten characters",
+  "any.required": "Please enter a valid message.",
+});
+const status = Joi.string()
+  .required()
+  .valid(
+    "pending",
+    "picked-up",
+    "on-hold",
+    "out-for-delivery",
+    "cancelled",
+    "in-transit",
+    "enroute",
+    "delivered",
+    "returned"
+  )
+  .messages({
+    "string.empty": `Status must match  pending,
+  picked-up,
+  on-hold,
+  out-for-delivery,
+  cancelled,
+  in-transit,
+  enroute,
+  delivered,
+  returned`,
+    "any.required": "Please choose a valid status.",
+  });
+
 const createPostSchema = Joi.object({
   coverImage,
   title,
@@ -178,6 +210,21 @@ const createPostSchema = Joi.object({
 const createPostValidation = asyncHandler(async (req, res, next) => {
   try {
     await createPostSchema.validateAsync(req.body);
+    next();
+  } catch (error) {
+    res.status(422);
+    throw new Error(error.details[0].message);
+  }
+});
+
+const modifyStatusSchema = Joi.object({
+  status,
+  message,
+});
+
+const modifyStatusValidation = asyncHandler(async (req, res, next) => {
+  try {
+    await modifyStatusSchema.validateAsync(req.body);
     next();
   } catch (error) {
     res.status(422);
@@ -235,4 +282,5 @@ module.exports = {
   createPostValidation,
   commentValidation,
   replyValidation,
+  modifyStatusValidation,
 };

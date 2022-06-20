@@ -8,6 +8,8 @@ const deliveryRoutes = require("./routes/delivery");
 
 app.use(express.json());
 
+// Use git push heroku master to deploy
+
 let origin;
 if (process.env.NODE_ENV === "production") {
   origin = [

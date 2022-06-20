@@ -5,10 +5,12 @@ const {
   getDeliveries,
   removeDelivery,
   singleDelivery,
+  modifyStatus,
 } = require("../controllers/delivery");
 const protectAdminRoute = require("../middleware/adminMiddleware");
 
 const multer = require("multer");
+const { modifyStatusValidation } = require("../utilities/form-validation");
 const storage = multer.diskStorage({});
 
 const fileFilter = (req, file, cb) => {
@@ -33,5 +35,7 @@ router.put(
 router.get("/all-deliveries", protectAdminRoute, getDeliveries);
 router.delete("/delete/:id", protectAdminRoute, removeDelivery);
 router.get("/single/:id", singleDelivery);
+
+router.put("/single/:id", modifyStatusValidation, modifyStatus);
 
 module.exports = router;

@@ -198,10 +198,47 @@ const singleDelivery = asyncHandler(async (req, res) => {
   }
 });
 
+const modifyStatus = asyncHandler(async (req, res) => {
+  const id =
+    req.params.id.split("-").length === 1
+      ? req.params.id
+      : req.params.id.split("-")[1];
+  const { status, message } = req.body;
+  let delivery;
+
+  if (!id) {
+    res.status(400);
+    throw new Error("Please provide some Id");
+  }
+
+  try {
+    delivery = await MODEL.updateOne(
+      { _id: id },
+      {
+        deliveryStatus: {
+          status,
+          message,
+        },
+      }
+    );
+  } catch (error) {
+    res.status(400);
+    throw new Error("Failed to update status of delivery. Please try again.");
+  }
+
+  if (!delivery) {
+    res.status(500);
+    throw new Error("Failed to update delivery. Please try again");
+  } else {
+    success(res, 202, "Status updated successfully!");
+  }
+});
+
 module.exports = {
   create,
   addImages,
   getDeliveries,
   removeDelivery,
   singleDelivery,
+  modifyStatus,
 };
