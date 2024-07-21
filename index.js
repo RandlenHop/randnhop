@@ -1,27 +1,28 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const cors = require("cors");
-require("dotenv/config");
-const connectDB = require("./config/db");
-const userRoutes = require("./routes/user");
-const deliveryRoutes = require("./routes/delivery");
+const cors = require('cors');
+require('dotenv/config');
+const connectDB = require('./config/db');
+const userRoutes = require('./routes/user');
+const deliveryRoutes = require('./routes/delivery');
 
 app.use(express.json());
 
 // Use git push heroku master to deploy
 
 let origin;
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === 'production') {
   origin = [
-    "*",
-    "https://www.swizzlloyddelivery.com",
+    '*',
+    'https://www.swizzlloyddelivery.com',
+    // 'http://localhost:3000',
     // "https://www.swizzlloyddelivery.com/",
     // "https://swizzlloyddelivery.com",
     // "www.swizzlloyddelivery.com/",
     // "swizzlloyddelivery.com",
   ];
 } else {
-  origin = ["http://localhost:3000"];
+  origin = ['http://localhost:3000'];
 }
 
 const corsOptions = {
@@ -33,11 +34,11 @@ app.use(cors(corsOptions));
 // Connect Database
 connectDB();
 
-app.use("/api/user", userRoutes);
-app.use("/api/delivery", deliveryRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/delivery', deliveryRoutes);
 
 // Error Middlewares
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 //Not found URL middleware
 app.use(notFound);
