@@ -48,7 +48,7 @@ app.use((req, res, next) => {
     "GET, POST, PUT, DELETE, OPTIONS"
   );
   res.header("Access-Control-Allow-Credentials", "true");
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.sendStatus(204);
