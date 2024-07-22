@@ -10,29 +10,35 @@ app.use(express.json());
 
 // Use git push heroku master to deploy
 
-let origin;
+let allowedOrigins;
 if (process.env.NODE_ENV === 'production') {
-  origin = [
-    '*',
-    'https://www.swizzlloyddelivery.com',
-    // 'http://localhost:3000',
-    // "https://www.swizzlloyddelivery.com/",
-    // "https://swizzlloyddelivery.com",
-    // "www.swizzlloyddelivery.com/",
-    // "swizzlloyddelivery.com",
-  ];
+  allowedOrigins = ['https://www.swizzlloyddelivery.com'];
 } else {
-  origin = ['http://localhost:3000'];
+  allowedOrigins = ['http://localhost:3000'];
 }
 
 const corsOptions = {
-  origin: origin,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   optionsSuccessStatus: 200,
 };
 
+app.use(cors(corsOptions));
+
 // Set CORS headers manually
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", origin.includes(req.headers.origin) ? req.headers.origin : origin[0]);
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
@@ -51,7 +57,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Connect Database
 connectDB();
 
@@ -61,10 +66,10 @@ app.use('/api/delivery', deliveryRoutes);
 // Error Middlewares
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
-//Not found URL middleware
+// Not found URL middleware
 app.use(notFound);
 
-//Error handler for the whole app
+// Error handler for the whole app
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4011;
