@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const corsOptions = {
-    origin: 'https://www.swizzlloyddelivery.com',
+    origin: origin,
     optionsSuccessStatus: 200,
 };
 
