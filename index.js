@@ -55,15 +55,15 @@ app.use('/api/delivery', deliveryRoutes);
 
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static(path.join(__dirname + 'acl-client', 'build')));
+  app.use(express.static(path.join(__dirname + 'acl-web-client', 'build')));
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'acl-client', 'build', 'index.html'), (err) => {
+  aapp.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'acl-web-client/public/index.html'), function(err) {
       if (err) {
-        res.status(500).send(err);
+        res.status(500).send(err)
       }
-    });
-  });
+    })
+  })
 }
 
 // Error Middlewares
