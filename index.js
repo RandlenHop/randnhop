@@ -6,6 +6,7 @@ const path = require('path');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/user');
 const deliveryRoutes = require('./routes/delivery');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 app.use(express.json());
 
@@ -64,7 +65,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Error Middlewares
-const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 //Not found URL middleware
 app.use(notFound);
