@@ -27,8 +27,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const corsOptions = {
-    origin:'https://www.swizzlloyddelivery.com',
-   optionsSuccessStatus: 200,
+    origin: 'https://www.swizzlloyddelivery.com',
+    optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -38,16 +38,13 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "*/*",
     "Origin,X-Requested-With,Content-Type",
     "Accept",
     "Authorization"
   );
-  res.header("Access-Control-Allow-Origin", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
-
-
 
 
 // Connect Database
@@ -58,10 +55,14 @@ app.use('/api/delivery', deliveryRoutes);
 
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static(path.join(__dirname, 'acl-web-client', 'build')));
+  app.use(express.static(path.join(__dirname + 'acl-client', 'build')));
 
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + "./public"))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'acl-client', 'build', 'index.html'), (err) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+    });
   });
 }
 
