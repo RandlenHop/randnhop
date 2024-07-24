@@ -11,24 +11,24 @@ app.use(express.json());
 
 // Use git push heroku master to deploy
 
-// let origin;
-// if (process.env.NODE_ENV === 'production') {
-//   origin = [
-//     '*',
-//     'https://www.swizzlloyddelivery.com',
-//     // 'http://localhost:3000',
-//     // "https://www.swizzlloyddelivery.com/",
-//     // "https://swizzlloyddelivery.com",
-//     // "www.swizzlloyddelivery.com/",
-//     // "swizzlloyddelivery.com",
-//   ];
-// } else {
-//   origin = ['http://localhost:3000'];
-// }
+let origin;
+if (process.env.NODE_ENV === 'production') {
+  origin = [
+    '*',
+    'https://www.swizzlloyddelivery.com',
+    // 'http://localhost:3000',
+    // "https://www.swizzlloyddelivery.com/",
+    // "https://swizzlloyddelivery.com",
+    // "www.swizzlloyddelivery.com/",
+    // "swizzlloyddelivery.com",
+  ];
+} else {
+  origin = ['http://localhost:3000'];
+}
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? 'https://www.swizzlloyddelivery.com' : 'http://localhost:3000',
-  optionsSuccessStatus: 200,
+    origin,
+    optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -53,18 +53,14 @@ connectDB();
 app.use('/api/user', userRoutes);
 app.use('/api/delivery', deliveryRoutes);
 
-// if (process.env.NODE_ENV === 'production') {
-//   // Set static folder
-//   app.use(express.static(path.join(__dirname + 'acl-web-client', 'build')));
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static(path.join(__dirname + 'acl-web-client', 'build')));
 
-//   aapp.get('/*', function(req, res) {
-//     res.sendFile(path.join(__dirname, 'acl-web-client/public/index.html'), function(err) {
-//       if (err) {
-//         res.status(500).send(err)
-//       }
-//     })
-//   })
-// }
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'acl-web-client', 'build', 'index.html'));
+  });
+}
 
 // Error Middlewares
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
