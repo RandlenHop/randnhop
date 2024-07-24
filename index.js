@@ -38,13 +38,16 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
+    "*/*",
     "Origin,X-Requested-With,Content-Type",
     "Accept",
     "Authorization"
   );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Origin", "true");
   next();
 });
+
+
 
 
 // Connect Database
@@ -57,8 +60,8 @@ if (process.env.NODE_ENV === 'production') {
   // Set static folder
   app.use(express.static(path.join(__dirname, 'acl-web-client', 'build')));
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'acl-web-client', 'build', 'index.html'));
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + "./public"))
   });
 }
 
