@@ -27,8 +27,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const corsOptions = {
-    origin,
-    optionsSuccessStatus: 200,
+    origin:'https://www.swizzlloyddelivery.com',
+   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -55,7 +55,7 @@ app.use('/api/delivery', deliveryRoutes);
 
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static(path.join(__dirname + 'acl-web-client', 'build')));
+  app.use(express.static(path.join(__dirname, 'acl-web-client', 'build')));
 
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'acl-web-client', 'build', 'index.html'));
