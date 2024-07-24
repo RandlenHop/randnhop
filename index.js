@@ -11,40 +11,40 @@ app.use(express.json());
 
 // Use git push heroku master to deploy
 
-let origin;
-if (process.env.NODE_ENV === 'production') {
-  origin = [
-    '*',
-    'https://www.swizzlloyddelivery.com',
-    // 'http://localhost:3000',
-    // "https://www.swizzlloyddelivery.com/",
-    // "https://swizzlloyddelivery.com",
-    // "www.swizzlloyddelivery.com/",
-    // "swizzlloyddelivery.com",
-  ];
-} else {
-  origin = ['http://localhost:3000'];
-}
+// let origin;
+// if (process.env.NODE_ENV === 'production') {
+//   origin = [
+//     '*',
+//     'https://www.swizzlloyddelivery.com',
+//     // 'http://localhost:3000',
+//     // "https://www.swizzlloyddelivery.com/",
+//     // "https://swizzlloyddelivery.com",
+//     // "www.swizzlloyddelivery.com/",
+//     // "swizzlloyddelivery.com",
+//   ];
+// } else {
+//   origin = ['http://localhost:3000'];
+// }
 
 const corsOptions = {
-    origin: 'https://www.swizzlloyddelivery.com',
-    optionsSuccessStatus: 200,
+  origin: process.env.NODE_ENV === 'production' ? 'https://www.swizzlloyddelivery.com' : 'http://localhost:3000',
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 
 // Set CORS headers manually
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin,X-Requested-With,Content-Type",
-    "Accept",
-    "Authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin,X-Requested-With,Content-Type",
+//     "Accept",
+//     "Authorization"
+//   );
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   next();
+// });
 
 
 // Connect Database
@@ -53,18 +53,18 @@ connectDB();
 app.use('/api/user', userRoutes);
 app.use('/api/delivery', deliveryRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static(path.join(__dirname + 'acl-web-client', 'build')));
+// if (process.env.NODE_ENV === 'production') {
+//   // Set static folder
+//   app.use(express.static(path.join(__dirname + 'acl-web-client', 'build')));
 
-  aapp.get('/*', function(req, res) {
-    res.sendFile(path.join(__dirname, 'acl-web-client/public/index.html'), function(err) {
-      if (err) {
-        res.status(500).send(err)
-      }
-    })
-  })
-}
+//   aapp.get('/*', function(req, res) {
+//     res.sendFile(path.join(__dirname, 'acl-web-client/public/index.html'), function(err) {
+//       if (err) {
+//         res.status(500).send(err)
+//       }
+//     })
+//   })
+// }
 
 // Error Middlewares
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
