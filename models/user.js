@@ -1,74 +1,53 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const asyncHandler = require("express-async-handler");
-const { errorResponse } = require("../utilities/handleResponse");
-const res = require("express/lib/response");
+const jwt = require("jsonwebtoken");
 
-const userSchema = mongoose.Schema(
-  {
-    name: {
-      type: String,
-    },
-
-    email: {
-      type: String,
-    },
-
-    username: {
-      type: String,
-    },
-    password: {
-      type: String,
-    },
-
-    isAccepted: {
-      type: Boolean,
-      default: false,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
+const UserSchema = new mongoose.Schema({
+  surname: {
+    type: String,
+    required: [true, "Please provide name"],
+    minlength: 3,
+    maxlength: 50,
   },
-  {
-    timestamps: true,
-  }
-);
+  otherNames: { type: String, required: true, trim: true },
+  phoneNumber: { type: String, required: true, unique: true },
+  email: {
+    type: String,
+    required: [true, "Please provide email"],
+    validate: {
+      validator: validator.isEmail,
+      message: "Please provide valid email",
+      lowercase: true,
+    },
+    // unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Please provide password"],
+    minlength: 6,
+  },
+},{ timestamps: true });
 
-// This method matches a poster's password and can be used as: await ThePosterFromDatabase.matchPassword(password)
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-/**
- * @description This rehashes a password if updated or changed.
- */
-userSchema.pre("save", async function (next) {
-  // This first one checks to see that it doesnt rehash a password on login or registe
-  if (!this.isModified("password")) {
-    next();
-  }
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-});
+},);
 
-// This rehashes a password if updated or changed.
+UserSchema.methods.createJWT = function () {
+  return jwt.sign(
+    { userId: this._id, surname: this.surname },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    },
+  );
+};
 
-// userSchema.statics.checkRegCode = function (regCode) {
-//   try {
-//     const exists = this.findById(regCode);
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
+};
 
-//     console.log(exists.);
-
-//     if (exists.username) {
-//       errorResponse(res, 404, "Registration code has been used already.");
-//     } else {
-//       return exists;
-//     }
-//   } catch (error) {
-//     errorResponse(res, 404, "Registration code is invalid.");
-//   }
-// };
-
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+module.exports = mongoose.model("User", UserSchema);
