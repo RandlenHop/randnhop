@@ -2,35 +2,39 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+
+// 1. Import Routes
 const authRoutes = require('./routes/authRoutes');
-const coupleRoutes = require('./routes/coupleRoutes');
-const messageRoutes = require('./routes/messageRoutes');
-const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
+const profileRoutes = require('./routes/profileRoutes');
+const staffRequestRoutes = require('./routes/staffRequestRoutes');
+
+// 2. Import Middlewares 
+const { notFound, errorHandlerMiddleware } = require('./middlewares/errorMiddleware');
 
 const app = express();
 
-// Connect to database
-connectDB();
-
-// Middleware
+// 3. Standard Middleware
 app.use(cors());
 app.use(express.json());
 
-// Test base route to verify server is working
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
+// 4. Routes 
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/profile', profileRoutes);
+app.use('/api/v1/staff-request', staffRequestRoutes);
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/couple', coupleRoutes);
-app.use('/api/messages', messageRoutes);
-
-// Error handling middleware
-app.use(notFound);
-app.use(errorHandler);
+// 5. THE CATCH-ALLS 
+app.use(notFound);           
+app.use(errorHandlerMiddleware); 
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    app.listen(PORT, () => console.log(`🚀 Server flying on port ${PORT}`));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();

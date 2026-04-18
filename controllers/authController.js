@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
-// Note: Ensure your 'errors' folder exists, or use standard res.status logic
 const { BadRequestError, UnauthenticatedError } = require('../errors');
 
 const register = async (req, res) => {
