@@ -8,6 +8,11 @@ const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const staffRequestRoutes = require('./routes/staffRequestRoutes');
 
+
+app.get('/', (req, res) => {
+  res.send('<h1>Rand & Hop API is running...</h1><p>Connect via frontend or Postman.</p>');
+});
+
 // 2. Import Middlewares 
 const { notFound, errorHandlerMiddleware } = require('./middlewares/errorMiddleware');
 
