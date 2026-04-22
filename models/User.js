@@ -6,12 +6,12 @@ const jwt = require("jsonwebtoken");
 const UserSchema = new mongoose.Schema({
   surname: {
     type: String,
-    required: [true, "Please provide name"],
+    required: [true, "Please provide surname"],
     minlength: 3,
     maxlength: 50,
   },
-  otherNames: { type: String, required: true, trim: true },
-  phoneNumber: { type: String, required: true, unique: true },
+  otherNames: { type: String, required: [true, "Please provide other names"],trim: true },
+  phoneNumber: { type: String, required: [true, "Please provide phone number"], unique: true },
   email: {
     type: String,
     required: [true, "Please provide email"],
