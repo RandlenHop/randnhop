@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     maxlength: 50,
   },
   otherNames: { type: String, required: [true, "Please provide other names"],trim: true },
-  phoneNumber: { type: String, required: [true, "Please provide phone number"], unique: true },
+  phoneNumber: { type: String, required: [true, "Please provide phone number"] },
   email: {
     type: String,
     required: [true, "Please provide email"],
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
       message: "Please provide valid email",
       lowercase: true,
     },
-    // unique: true,
+  
   },
   password: {
     type: String,

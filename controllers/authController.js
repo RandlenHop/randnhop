@@ -11,14 +11,14 @@ const register = async (req, res) => {
   }
 
   // 2. Check if email or phone already exists
-  // We do this manually to give a clean message, though Mongoose unique:true would also catch it
-  const existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
-  if (existingUser) {
-    throw new BadRequestError('Email or Phone Number already exists');
-  }
 
+  // const existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
+  // if (existingUser) {
+  //   throw new BadRequestError('Email or Phone Number already exists');
+  // }
+
+  
   // 3. Create user
-  // Mongoose will automatically trigger the 'required' validation if fields are missing
   const user = await User.create({ 
     surname, 
     otherNames, 
@@ -68,7 +68,7 @@ const login = async (req, res) => {
   });
 };
 
-// Added Logout Route
+//Logout Route
 const logout = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'User logged out' });
 };
