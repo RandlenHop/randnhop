@@ -4,7 +4,6 @@ const UserModel = require("../models/User");
 const { decodeToken } = require("../utilities/handleToken");
 
 /**
- * @description checks poster admin token supplied as Bearer authorization
  * @required Bearer Authorization
  */
 
