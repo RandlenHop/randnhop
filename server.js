@@ -2,7 +2,7 @@ require('dotenv').config();
 require('express-async-errors');
 
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 const helmet = require('helmet'); 
 const xss = require('xss-clean'); 
 const connectDB = require('./config/db');
@@ -22,23 +22,23 @@ app.use(helmet());
 app.use(xss());
 
 // Optimized CORS Configuration
-// const allowedOrigins = [
-//   "http://localhost:5173",
-//   "http://127.0.0.1:5173",
-//   "https://randles-hopkick-q32p.vercel.app/" 
-// ];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://randles-hopkick-qkpn.vercel.app/" 
+];
 
-// app.use(cors({
-//   origin: (origin, callback) => {
-//     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   credentials: true,
-//   optionsSuccessStatus: 200
-// }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200
+}));
 
 app.use(express.json());
 
