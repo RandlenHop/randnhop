@@ -30,9 +30,12 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    // If the origin is in our list or if there is no origin (like Postman/Mobile)
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      // Senior move: log the blocked origin so you can see exactly what to add
+      console.error(`CORS Error: Origin ${origin} not allowed`); 
       callback(new Error('Not allowed by CORS'));
     }
   },
