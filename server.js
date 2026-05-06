@@ -1,61 +1,74 @@
 require('dotenv').config();
 require('express-async-errors');
+
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet'); // Senior addition: Security headers
+const xss = require('xss-clean'); // Senior addition: Prevents XSS attacks
 const connectDB = require('./config/db');
 
-// 1. Import Routes
+// --- 1. Route Imports ---
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const staffRequestRoutes = require('./routes/staffRequestRoutes');
 
-
-
-
-// 2. Import Middlewares 
+// --- 2. Middleware Imports ---
 const { notFound, errorHandlerMiddleware } = require('./middlewares/errorMiddleware');
 
 const app = express();
 
-// 3. Standard Middleware
-// app.use(cors());
+// --- 3. Security & Global Middleware ---
+app.use(helmet());
+app.use(xss());
+
+// Optimized CORS Configuration
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://127.0.0.1:5173"
+  "http://127.0.0.1:5173",
+  "https://randles-hopkick-q32p.vercel.app/" 
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error("CORS not allowed"));
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
+
 app.use(express.json());
 
-// 4. Routes 
+// Routes
+app.get('/', (req, res) => {
+  res.status(200).send('<h1>Rand & Hop API</h1><p>Status:Working</p>');
+});
+
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/staff-request', staffRequestRoutes);
-app.get('/', (req, res) => {
-  res.send('<h1>Rand & Hop API is running...</h1><p>Connect via frontend or Postman.</p>');
-});
 
-// 5. THE CATCH-ALLS 
+// Error Handling 
 app.use(notFound);           
 app.use(errorHandlerMiddleware); 
 
+// Server Initialization
 const PORT = process.env.PORT || 4000;
 
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(PORT, () => console.log(`🚀 Server flying on port ${PORT}`));
+    console.log('Database Connected...');
+    
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    });
   } catch (error) {
-    console.log(error);
+    console.error('❌ Server startup failed:', error);
+    process.exit(1); 
   }
 };
 
