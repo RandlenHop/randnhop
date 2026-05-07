@@ -27,27 +27,40 @@ const allowedOrigins = [
   "http://127.0.0.1:5173",
 /\.vercel\.app$/];
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps or curl)
     if (!origin) {
       return callback(null, true);
     }
-    // check if the request origin is in the allowed list
-    const isAllowed = allowedOrigins.some(o => 
-      (o instanceof RegExp) ? o.test(origin) : (o === origin)
+
+    const isAllowed = allowedOrigins.some(o =>
+      (o instanceof RegExp)
+        ? o.test(origin)
+        : o === origin
     );
+
     if (isAllowed) {
-      return callback(null, true);  // echo the requested origin
+      return callback(null, true);
     }
+
     console.error(`CORS Error: Origin ${origin} not allowed`);
     return callback(new Error('Not allowed by CORS'));
   },
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
 
-app.options('*', cors()); 
+  credentials: true,
+
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization'
+  ],
+
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 
 // Routes
