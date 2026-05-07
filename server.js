@@ -22,27 +22,32 @@ app.use(helmet());
 app.use(xss());
 
 // Optimized CORS Configuration
-const allowedOrigins = ["*",
+const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-  "https://randles-hopkick-qkpn.vercel.app" 
-];
+/\.vercel\.app$/];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // If the origin is in our list or if there is no origin (like Postman/Mobile)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      // Senior move: log the blocked origin so you can see exactly what to add
-      console.error(`CORS Error: Origin ${origin} not allowed`); 
-      callback(new Error('Not allowed by CORS'));
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin) {
+      return callback(null, true);
     }
+    // check if the request origin is in the allowed list
+    const isAllowed = allowedOrigins.some(o => 
+      (o instanceof RegExp) ? o.test(origin) : (o === origin)
+    );
+    if (isAllowed) {
+      return callback(null, true);  // echo the requested origin
+    }
+    console.error(`CORS Error: Origin ${origin} not allowed`);
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   optionsSuccessStatus: 200
 }));
 
+app.options('*', cors()); 
 app.use(express.json());
 
 // Routes
