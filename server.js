@@ -11,13 +11,12 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const staffRequestRoutes = require('./routes/staffRequestRoutes');
-
-// Middleware Imports 
+const adminRoutes = require('./routes/adminRoutes');
+const contactRouter = require('./routes/contactRoutes');
 const { notFound, errorHandlerMiddleware } = require('./middlewares/errorMiddleware');
 
 const app = express();
 
-// Security & Global Middleware
 app.use(helmet());
 app.use(xss());
 
@@ -71,6 +70,8 @@ app.get('/', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/staff-request', staffRequestRoutes);
+app.use('/api/v1/contact', contactRouter);
+app.use('/api/v1/admin', adminRoutes);
 
 // Error Handling 
 app.use(notFound);           

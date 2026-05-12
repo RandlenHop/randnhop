@@ -9,26 +9,17 @@ const ProfileSchema = new mongoose.Schema(
       unique: true,
     },
     //STEP 1 FIELDS
-    nationality: { type: String, required: true },
+    country: { type: String, required: true },
     homeAddress: { type: String, required: true },
     maritalStatus: { type: String, required: true },
-    languageSkill: { type: String, required: true,enum: ["English", "Yoruba", "French"] },
+    languageSkill: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
-    gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+    gender: { type: String, enum: ["Male", "Female"], required: true },
     isDisabled: { type: String, default: "No" }, 
     isInternallyDisplaced: { type: String, default: "No" }, 
 
     // STEP 2 FIELDS 
-    primarySkills: { type: String, required: true,enum: [
-    'Waiter', 
-    'Cleaner', 
-    'Driver', 
-    'Cook', 
-    'Laundry Man', 
-    'Security Guard', 
-    'House Help', 
-    'Gardener'
-  ], },
+    primarySkills: { type: String, required: true },
     yearsOfExperience: { type: Number, default: 0 },
     additionalSkill: { type: String },
     bio: { type: String, maxLength: 1000 },

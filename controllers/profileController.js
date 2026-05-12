@@ -3,7 +3,6 @@ const { StatusCodes } = require("http-status-codes");
 
 const createOrUpdateProfile = async (req, res) => {
   try {
-    // Add the user ID to the body from the auth middleware
     const profileData = {
       ...req.body,
       user: req.user.userId,
@@ -49,8 +48,8 @@ const getStaffMarketplace = async (req, res) => {
     agreedToPolicy: true,
     user: { $ne: req.user.userId }, // exclude my own profile in the marketplace
   })
-    .populate("user", "surname otherNames") // names from your User model
-    .select("primarySkills yearsOfExperience bio gender"); // other info that wants to be grabed
+    .populate("user", "surname otherNames email photoUrl") 
+    .select("primarySkills yearsOfExperience bio gender status currentJobId"); 
 
   res.status(StatusCodes.OK).json({
     success: true,

@@ -10,6 +10,11 @@ const UserSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 50,
   },
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user', 
+  },
   otherNames: { type: String, required: [true, "Please provide other names"],trim: true },
   phoneNumber: { type: String, required: [true, "Please provide phone number"] },
   email: {
@@ -27,6 +32,10 @@ const UserSchema = new mongoose.Schema({
     required: [true, "Please provide password"],
     minlength: 6,
   },
+photoUrl: {
+  type: String,
+  default: 'https://res.cloudinary.com/placeholder-avatar.png', 
+},
 },{ timestamps: true });
 
 UserSchema.pre("save", async function () {
@@ -37,7 +46,7 @@ UserSchema.pre("save", async function () {
 
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userId: this._id, surname: this.surname },
+    { userId: this._id, surname: this.surname ,role: this.role},
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_LIFETIME,

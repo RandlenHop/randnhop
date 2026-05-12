@@ -11,11 +11,25 @@ const authenticateUser = async (req, res, next) => {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { userId: payload.userId, name: payload.name };
+    req.user = { 
+      userId: payload.id, 
+      name: payload.username, 
+      role: payload.role 
+    };
+    
     next();
   } catch (error) {
     throw new UnauthenticatedError('Authentication invalid');
   }
 };
 
-module.exports =  authenticateUser ;
+const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ msg: 'Unauthorized to access this route' });
+    }
+    next();
+  };
+};
+
+module.exports = { authenticateUser, authorizeRoles };

@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const UserModel = require("../models/User");
-const { decodeToken } = require("../utilities/handleToken");
-
+const decoded = decodeToken(token);
 /**
  * @required Bearer Authorization
  */
@@ -19,9 +18,8 @@ const protectAdminPoster = asyncHandler(async (req, res, next) => {
       const decoded = decodeToken(token);
 
       const poster = await UserModel.findOne({
-        _id: decoded.fieldToSecure,
-        isAccepted: true,
-        isAdmin: true,
+        _id: decoded.id,
+        role: "admin",
       }).select("-password");
 
       if (!poster) {
@@ -41,7 +39,7 @@ const protectAdminPoster = asyncHandler(async (req, res, next) => {
   if (!token) {
     res.status(401);
     throw new Error(
-      "You are not authorized to use this service, no token provided."
+      "You are not authorized to use this service, no token provided.",
     );
   }
 });

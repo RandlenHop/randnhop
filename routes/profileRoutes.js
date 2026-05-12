@@ -5,7 +5,7 @@ const {
   getMyProfile, 
   getStaffMarketplace 
 } = require('../controllers/profileController');
-const authenticateUser = require('../middlewares/auth'); 
+const { authenticateUser, authorizeRoles }= require('../middlewares/auth'); 
 
 router.route('/')
   .post(authenticateUser, createOrUpdateProfile) 
@@ -13,6 +13,5 @@ router.route('/')
 
 
 router.route('/marketplace')
-  .get(authenticateUser, getStaffMarketplace);
-
+.get(authenticateUser, authorizeRoles('admin'), getStaffMarketplace);
 module.exports = router;

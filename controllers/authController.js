@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const { BadRequestError, UnauthenticatedError } = require('../errors');
 
 const register = async (req, res) => {
-  const { surname, otherNames, phoneNumber, email, password, confirmPassword } = req.body;
+  const { surname, otherNames, phoneNumber, email, password, confirmPassword ,photoUrl} = req.body;
 
   // 1. Password confirmation check
   if (password !== confirmPassword) {
@@ -24,7 +24,8 @@ const register = async (req, res) => {
     otherNames, 
     phoneNumber, 
     email, 
-    password 
+    password,
+    photoUrl
   });
 
   const token = user.createJWT();
@@ -34,6 +35,10 @@ const register = async (req, res) => {
       surname: user.surname,
       otherNames: user.otherNames,
       email: user.email,
+      photoUrl: user.photoUrl, 
+      phoneNumber:user.phoneNumber,
+      role:user.role
+
     },
     token,
   });
@@ -55,16 +60,63 @@ const login = async (req, res) => {
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError('Invalid Credentials');
   }
-
   const token = user.createJWT();
-
   res.status(StatusCodes.OK).json({
     user: { 
+      
       surname: user.surname, 
       otherNames: user.otherNames, 
-      email: user.email 
+      email: user.email,
+      phoneNumber:user.phoneNumber,
+      role:user.role
     },
     token,
+  });
+};
+
+
+const adminGateLogin = async (req, res) => {
+  const { adminPassword } = req.body;
+
+  if (!adminPassword) {
+    throw new BadRequestError('Please provide the admin gate password');
+  }
+
+  // 1. Validate against the secret key in your .env file
+  if (adminPassword !== process.env.ADMIN_GATE_PASSWORD) {
+    throw new UnauthenticatedError('Invalid Admin Gate Password');
+  }
+
+  // 2. Fetch the actual Admin user from the database
+  const adminUser = await User.findOne({ role: 'admin' });
+
+  if (!adminUser) {
+    throw new UnauthenticatedError('No administrator account found in database');
+  }
+
+  // 3. Generate a real token for the admin dashboard session
+  const token = adminUser.createJWT();
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    user: { 
+      surname: adminUser.surname, 
+      role: adminUser.role 
+    },
+    token,
+  });
+};
+
+// getAllUsers Route
+const getAllUsers = async (req, res) => {
+  const users = await User.find({})
+    .select('surname otherNames email phoneNumber photoUrl createdAt')
+    .sort('-createdAt');
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    count: users.length,
+    users
   });
 };
 
@@ -76,5 +128,7 @@ const logout = async (req, res) => {
 module.exports = {
   register,
   login,
-  logout
+  adminGateLogin,
+  logout,
+  getAllUsers
 };
