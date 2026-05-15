@@ -36,6 +36,8 @@ photoUrl: {
   type: String,
   default: 'https://res.cloudinary.com/placeholder-avatar.png', 
 },
+passwordResetToken: String,
+passwordResetExpires: Date,
 },{ timestamps: true });
 
 UserSchema.pre("save", async function () {

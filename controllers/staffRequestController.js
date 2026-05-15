@@ -4,7 +4,6 @@ const { StatusCodes } = require('http-status-codes');
 const createStaffRequest = async (req, res) => {
   // 1. Inject the logged-in user's ID
   req.body.user = req.user.userId;
-
   const { clientType } = req.body;
 
   // 2. Data Cleaning
