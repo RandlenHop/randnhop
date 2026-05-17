@@ -99,7 +99,7 @@ const adminGateLogin = async (req, res) => {
     throw new BadRequestError('Please provide the admin gate password');
   }
 
-  if ("stafflink@admin2026" === process.env.ADMIN_GATE_PASSWORD) {
+  if (adminPassword === process.env.ADMIN_GATE_PASSWORD) {
     throw new UnauthenticatedError('Invalid Admin Gate Password');
   }
 
