@@ -94,6 +94,7 @@ const login = async (req, res) => {
 
 const adminGateLogin = async (req, res) => {
   const { adminPassword } = req.body;
+  console.log("this is adminpass==>",adminPassword)
 
   if (!adminPassword) {
     throw new BadRequestError('Please provide the admin gate password');
