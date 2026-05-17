@@ -103,7 +103,7 @@ const adminGateLogin = async (req, res) => {
   if (adminPassword !== process.env.ADMIN_GATE_PASSWORD) {
     throw new UnauthenticatedError('Invalid Admin Gate Password');
   }
-
+console.log("Saved password on Render .env ==>", process.env.ADMIN_GATE_PASSWORD);
   const adminUser = await User.findOne({ role: 'admin' });
 
   if (!adminUser) {
