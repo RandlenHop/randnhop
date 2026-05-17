@@ -94,8 +94,9 @@ const login = async (req, res) => {
 
 const adminGateLogin = async (req, res) => {
   const { adminPassword } = req.body;
-  console.log("this is adminpass==>",adminPassword)
-
+  console.log("1. This is what the frontend sent ==>", adminPassword);
+  console.log("2. This is what Render has in .env ==>", process.env.ADMIN_GATE_PASSWORD);
+  
   if (!adminPassword) {
     throw new BadRequestError('Please provide the admin gate password');
   }
@@ -103,7 +104,6 @@ const adminGateLogin = async (req, res) => {
   if (adminPassword !== process.env.ADMIN_GATE_PASSWORD) {
     throw new UnauthenticatedError('Invalid Admin Gate Password');
   }
-console.log("Saved password on Render .env ==>", process.env.ADMIN_GATE_PASSWORD);
   const adminUser = await User.findOne({ role: 'admin' });
 
   if (!adminUser) {
