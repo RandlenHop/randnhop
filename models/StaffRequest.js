@@ -9,19 +9,19 @@ const StaffRequestSchema = new mongoose.Schema({
   clientType: {
     type: String,
     enum: ['Organisation','Private'],
-    required: [true, 'Please specify if this is an Organisation or Individual request']
+    required: [true, 'Please specify if this is an Organisation or Private request']
   },
 
-  // PRIVATE INDIVIDUAL FIELDS 
+  // PRIVATE Private FIELDS 
   personalDetails: {
     surname: { 
       type: String, 
-      required: function() { return this.clientType === 'Individual'; } 
+      required: function() { return this.clientType === 'Private'; } 
     },
     otherName: { type: String },
     email: { 
       type: String,
-      required: function() { return this.clientType === 'Individual'; } 
+      required: function() { return this.clientType === 'Private'; } 
     },
     phoneNo: { type: String },
     country: { type: String },

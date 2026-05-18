@@ -94,9 +94,7 @@ const login = async (req, res) => {
 
 const adminGateLogin = async (req, res) => {
   const { adminPassword } = req.body;
-  console.log("1. This is what the frontend sent ==>", adminPassword);
-  console.log("2. This is what Render has in .env ==>", process.env.ADMIN_GATE_PASSWORD);
-  
+
   if (!adminPassword) {
     throw new BadRequestError('Please provide the admin gate password');
   }
@@ -104,7 +102,8 @@ const adminGateLogin = async (req, res) => {
   if (adminPassword !== process.env.ADMIN_GATE_PASSWORD) {
     throw new UnauthenticatedError('Invalid Admin Gate Password');
   }
-  const adminUser = await User.findOne({ role: 'admin' });
+  const adminUser = await User.findOne({ role: 'admin'}
+  );
 
   if (!adminUser) {
     throw new UnauthenticatedError('No administrator account found in database');
