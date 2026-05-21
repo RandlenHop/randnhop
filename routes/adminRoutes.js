@@ -6,7 +6,8 @@ const {
   rejectRequest, 
   setDates, 
   assignStaffToRequest,
-  completeRequest 
+  completeRequest,
+  submitReview
 } = require('../controllers/adminController');
 const{getStaffMarketplace}= require('../controllers/profileController');
 const { authenticateUser, authorizeRoles } = require('../middlewares/auth');
@@ -19,12 +20,14 @@ router.get('/marketplace', getStaffMarketplace);
 router.get('/mastermarketplace', getMasterMarketplace);
 
 
-// router.patch('/:id/approve', approveRequest);
-// router.patch('/:id/reject', rejectRequest);  
-// router.patch('/:id/dates', setDates);       
-// router.patch('/:id/assign', assignStaffToRequest);
+router.patch('/:id/approve', approveRequest);
+router.patch('/:id/reject', rejectRequest);  
+router.patch('/:id/date', setDates);       
+router.patch('/:id/assign', assignStaffToRequest);
+router.patch('/:id/complete', completeRequest); 
 router.patch('/:id/getMasterMarketplace',getMasterMarketplace); 
 
-router.patch('/:id/complete', completeRequest); 
+router.post('/profile/:id/review', submitReview);
+
 
 module.exports = router;

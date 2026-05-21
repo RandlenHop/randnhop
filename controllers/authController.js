@@ -16,7 +16,7 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: `Your App Name <${process.env.EMAIL_USER}>`,
+    from: `randles and hopkick<${process.env.EMAIL_USER}>`,
     to: options.email,
     subject: options.subject,
     text: options.message,
