@@ -29,12 +29,10 @@ const sendEmail = async (options) => {
 const register = async (req, res) => {
 const { surname, otherNames, phoneNumber, email, password, confirmPassword ,photoUrl} = req.body;
 
-  // 1. Password confirmation check
   if (password !== confirmPassword) {
     throw new BadRequestError('Passwords do not match');
   }
   
-  // 2. Create user
   const user = await User.create({ 
     surname, 
     otherNames, 
@@ -127,10 +125,9 @@ const forgotPassword = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) throw new NotFoundError('There is no user with that email address');
 
-  // 1. Generate random reset token
   const resetToken = crypto.randomBytes(20).toString('hex');
 
-  // 2. Hash token and set to database fields (expires in 10 mins)
+  // 2.(expires in 10 mins)
   user.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
   user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
@@ -149,6 +146,7 @@ const forgotPassword = async (req, res) => {
 
     res.status(StatusCodes.OK).json({ msg: 'Token sent to email!' });
   } catch (err) {
+    console.error("NODEMAILER ERROR LOG ERROR DETECTED ==>", err);
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
@@ -197,7 +195,6 @@ const getAllUsers = async (req, res) => {
   });
 };
 
-//Logout Route
 const logout = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'User logged out' });
 };

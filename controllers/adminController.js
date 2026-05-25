@@ -196,7 +196,6 @@ const completeRequest = async (req, res) => {
 
 // 3. RATING & REVIEWS INTEGRATION PORTAL
 
-
 const submitReview = async (req, res) => {
   const { reqId } = req.params;
   const { staffId, rating, comment } = req.body;
