@@ -2,30 +2,34 @@ const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { BadRequestError, UnauthenticatedError,NotFoundError } = require('../errors');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
 
 
+const axios = require('axios');
 
 const sendEmail = async (options) => {
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  family: 4, // 👈 Force IPv4
-});
-
-  const mailOptions = {
-    from: `randles and hopkick<${process.env.EMAIL_USER}>`,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-  };
-
-  await transporter.sendMail(mailOptions);
+  try {
+    await axios.post(
+      'https://api.brevo.com/v3/smtp/email',
+      {
+        // 🟢 Put your real Gmail address here! Brevo allows it completely free.
+        sender: { name: 'randles and hopkick', email: process.env.EMAIL_USER }, 
+        to: [{ email: options.email }],
+        subject: options.subject,
+        textContent: options.message,
+      },
+      {
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log(`Email successfully routed via Brevo API to: ${options.email}`);
+  } catch (error) {
+    console.error("BREVO API ERROR DETECTED ==>", error.response?.data || error.message);
+    throw error;
+  }
 };
 
 
