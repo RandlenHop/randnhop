@@ -5,29 +5,32 @@ const crypto = require('crypto');
 // const nodemailer = require('nodemailer');
 
 
-const axios = require('axios');
-
 const sendEmail = async (options) => {
   try {
-    await axios.post(
-      'https://api.brevo.com/v3/smtp/email',
-      {
-        // 🟢 Put your real Gmail address here! Brevo allows it completely free.
-        sender: { name: 'randles and hopkick', email: process.env.EMAIL_USER }, 
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // 🟢 Uses the Brevo system to send from your email to ANY recipient
+        sender: { name: 'StaffLink Admin', email: process.env.EMAIL_USER }, 
         to: [{ email: options.email }],
         subject: options.subject,
         textContent: options.message,
-      },
-      {
-        headers: {
-          'api-key': process.env.BREVO_API_KEY,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    console.log(`Email successfully routed via Brevo API to: ${options.email}`);
+      }),
+    });
+
+    // Capture response data if the status code isn't 200-299
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(JSON.stringify(errorData));
+    }
+
+    console.log(`Email successfully routed via Brevo HTTP Fetch API to: ${options.email}`);
   } catch (error) {
-    console.error("BREVO API ERROR DETECTED ==>", error.response?.data || error.message);
+    console.error("BREVO FETCH API ERROR DETECTED ==>", error.message);
     throw error;
   }
 };
