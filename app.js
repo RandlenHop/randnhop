@@ -7,7 +7,8 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
-const staffRequestRoutes = require('./routes/staffRequestRoutes'); // Fixed line 9
+const staffRequestRoutes = require('./routes/staffRequestRoutes'); 
+const testimonialRouter = require('./routes/testimonialRoutes');
 
 const app = express();
 
@@ -29,13 +30,12 @@ app.use((req, res, next) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/staff-request', staffRequestRoutes); 
+app.use('/api/v1/testimonials', testimonialRouter);
 
-// 3. Catch-all for 404
 app.use('*', (req, res) => {
   res.status(404).json({ msg: `Path not found: ${req.originalUrl}` });
 });
 
-// 4. Error handling middleware
 app.use(errorHandler);
 
 module.exports = app;
