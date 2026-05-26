@@ -1,3 +1,5 @@
+require('dotenv').config();
+require('dns').setDefaultResultOrder('ipv4first');
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -9,8 +11,8 @@ const staffRequestRoutes = require('./routes/staffRequestRoutes'); // Fixed line
 
 const app = express();
 
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
+
+
 
 // 1. Middleware
 app.use(cors());
