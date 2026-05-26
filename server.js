@@ -13,6 +13,8 @@ const profileRoutes = require('./routes/profileRoutes');
 const staffRequestRoutes = require('./routes/staffRequestRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const contactRouter = require('./routes/contactRoutes');
+const testimonialRouter = require('./routes/testimonialRoutes');
+
 const { notFound, errorHandlerMiddleware } = require('./middlewares/errorMiddleware');
 
 const app = express();
@@ -72,6 +74,8 @@ app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/staff-request', staffRequestRoutes);
 app.use('/api/v1/contact', contactRouter);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/testimonials', testimonialRouter);
+
 
 // Error Handling 
 app.use(notFound);           
