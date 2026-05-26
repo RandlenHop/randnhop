@@ -2,26 +2,29 @@ const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { BadRequestError, UnauthenticatedError,NotFoundError } = require('../errors');
 const crypto = require('crypto');
-const { Resend } = require('resend');
-const resend = new Resend(process.env.RESEND_API_KEY);
+const nodemailer = require('nodemailer');
+
 
 
 const sendEmail = async (options) => {
-  try {
-    await resend.emails.send({
-      // 🟢 The free, default fallback domain provided by Resend for testing
-      from: 'randles and hopkick <onboarding@resend.dev>', 
-      to: options.email,
-      subject: options.subject,
-      text: options.message,
-    });
-    
-    console.log(`Email successfully dispatched via Resend HTTP API to: ${options.email}`);
-  } catch (error) {
-    console.error("RESEND API ERROR LOG DETECTED ==>", error);
-    throw error;
-  }
+  const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: `randles and hopkick<${process.env.EMAIL_USER}>`,
+    to: options.email,
+    subject: options.subject,
+    text: options.message,
+  };
+
+  await transporter.sendMail(mailOptions);
 };
+
 
 const register = async (req, res) => {
 const { surname, otherNames, phoneNumber, email, password, confirmPassword ,photoUrl} = req.body;
