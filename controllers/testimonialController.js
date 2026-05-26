@@ -29,7 +29,7 @@ const createTestimonialByAdmin = async (req, res) => {
     content,
     rating,
     avatar,
-    isApproved: isApproved || false, // Matches the "Show on website" visibility toggle
+    isApproved: isApproved || false, 
   });
 
   res.status(StatusCodes.CREATED).json({ msg: 'Testimonial created successfully!', testimonial });
