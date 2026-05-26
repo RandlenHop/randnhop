@@ -9,6 +9,9 @@ const staffRequestRoutes = require('./routes/staffRequestRoutes'); // Fixed line
 
 const app = express();
 
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
 // 1. Middleware
 app.use(cors());
 app.use(express.json());
