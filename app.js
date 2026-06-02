@@ -9,6 +9,8 @@ const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const staffRequestRoutes = require('./routes/staffRequestRoutes'); 
 const testimonialRouter = require('./routes/testimonialRoutes');
+const blogRoutes = require('./routes/blogRoutes');
+
 
 const app = express();
 
@@ -31,6 +33,8 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/staff-request', staffRequestRoutes); 
 app.use('/api/v1/testimonials', testimonialRouter);
+// app.use('/api/v1/blog', blogRoutes);
+
 
 app.use('*', (req, res) => {
   res.status(404).json({ msg: `Path not found: ${req.originalUrl}` });
