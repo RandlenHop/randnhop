@@ -32,10 +32,10 @@ const UserSchema = new mongoose.Schema({
     required: [true, "Please provide password"],
     minlength: 6,
   },
-photoUrl: {
-  type: String,
-  default: 'https://res.cloudinary.com/placeholder-avatar.png', 
-},
+// photoUrl: {
+//   type: String,
+//   default: 'https://res.cloudinary.com/placeholder-avatar.png', 
+// },
 passwordResetToken: String,
 passwordResetExpires: Date,
 },{ timestamps: true });
