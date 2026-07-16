@@ -15,7 +15,7 @@ const sendEmail = async (options) => {
       },
       body: JSON.stringify({
         // 🟢 Uses the Brevo system to send from your email to ANY recipient
-        sender: { name: 'StaffLink Admin', email: process.env.EMAIL_USER }, 
+        sender: { name: 'Randle and Hopkick', email: process.env.EMAIL_USER }, 
         to: [{ email: options.email }],
         subject: options.subject,
         textContent: options.message,
